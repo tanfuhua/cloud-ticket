@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.baidu.personalcode.dao.UserConfigMapper">
-    <resultMap id="BaseResultMap" type="com.baidu.personalcode.model.po.UserConfigDO">
+<mapper namespace="org.tanfuhua.dao.UserConfigMapper">
+    <resultMap id="BaseResultMap" type="org.tanfuhua.model.entity.UserConfigDO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="user_id" property="userId"/>
         <result column="start_book_info" property="startBookInfo"/>
