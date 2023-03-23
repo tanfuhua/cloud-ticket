@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baidu.personalcode.dao.UserConfigMapper">
+    <resultMap id="BaseResultMap" type="com.baidu.personalcode.model.po.UserConfigDO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId"/>
+        <result column="start_book_info" property="startBookInfo"/>
+        <result column="cookie_valid_status" property="cookieValidStatus"/>
+        <result column="schedule_time" property="scheduleTime"/>
+        <result column="run_status" property="runStatus"/>
+        <result column="book_type" property="bookType"/>
+        <result column="user_agent_index" property="userAgentIndex"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_id" property="updateUserId"/>
+        <result column="delete_flag" property="deleteFlag"/>
+    </resultMap>
+</mapper>
