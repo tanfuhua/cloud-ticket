@@ -1,0 +1,20 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application:
+    name: CloudBookTicket
+#  cloud:
+#    config:
+#      uri: http://bcop-ump-gaofubo.bcc-bdbl.baidu.com:8888
+version: 2
+# 热加载
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+versionInfo:
+  version: 1
+  info: xx
+user: gfb

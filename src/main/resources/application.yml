@@ -1,0 +1,46 @@
+server:
+  port: 8101
+spring:
+  datasource:
+    druid:
+      name: cloud_book_ticket
+      url: jdbc:mysql://localhost:3306/cloud_book_ticket?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&useSSL=false
+      username: root
+      password: admin
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 10
+      min-idle: 10
+      max-active: 200
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      filter:
+        stat:
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 500
+      enable: true
+      db-type: mysql
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.baidu.personalcode.model
+  type-enums-package: com.baidu.personalcode.enums
+
+# 记录dao层SQL执行日志
+logging:
+  level:
+    com.baidu.personalcode: debug
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+kyfw:
+  codeServer: http://10.211.55.5:8080/verify/base64/
