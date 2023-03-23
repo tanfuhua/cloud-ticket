@@ -30,13 +30,14 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:mapper/**/*.xml
-  type-aliases-package: com.baidu.personalcode.model
-  type-enums-package: com.baidu.personalcode.enums
+  type-aliases-package: org.tanfuhua.model
+  type-enums-package: org.tanfuhua.enums
 
 # 记录dao层SQL执行日志
 logging:
   level:
-    com.baidu.personalcode: debug
+    org.tanfuhua.dao: debug
+    org.tanfuhua.client: debug
 feign:
   okhttp:
     enabled: true
@@ -44,3 +45,5 @@ feign:
     enabled: false
 kyfw:
   codeServer: http://10.211.55.5:8080/verify/base64/
+app:
+  chrome-driver: /Users/gaofubo/Software/Mac/chromedriver_mac64/chromedriver_111.0.5563.64
