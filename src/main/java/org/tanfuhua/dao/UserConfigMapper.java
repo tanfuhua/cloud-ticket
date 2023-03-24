@@ -1,6 +1,3 @@
-/*
- * Copyright (C) 2021 Baidu, Inc. All Rights Reserved.
- */
 package org.tanfuhua.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
