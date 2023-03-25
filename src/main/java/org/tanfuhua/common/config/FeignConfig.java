@@ -81,29 +81,5 @@ public class FeignConfig {
         return Logger.Level.FULL;
     }
 
-    @Bean
-    public OkHttpClient.Builder okHttpClientBuilder() {
-        return new OkHttpClient
-                .Builder()
-                .addInterceptor(chain -> {
-                    Request request = chain.request();
-                    Response response = chain.proceed(request);
-                    // set-cookie逻辑
-                    Optional<UserBO> userSoOptional = SessionUtil.getUserBOOptional();
-                    if (!userSoOptional.isPresent()) {
-                        return response;
-                    }
-                    Headers headers = response.headers();
-                    Map<String, List<String>> headerMultiMap = headers.toMultimap();
-                    List<String> setCookieList = headerMultiMap.get(HttpHeaders.SET_COOKIE);
-                    if (CollectionUtils.isEmpty(setCookieList)) {
-                        return response;
-                    }
-                    log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(setCookieList));
-                    List<Cookie> cookieList = setCookieList.stream().map(StringUtil::stringToCookie).collect(Collectors.toList());
-                    SessionUtil.getUserBO().getKyfwBrowserBO().setCookieList(cookieList);
-                    log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new)));
-                    return response;
-                });
-    }
+
 }
