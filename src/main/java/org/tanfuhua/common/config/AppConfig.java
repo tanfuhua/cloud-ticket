@@ -26,7 +26,9 @@ public class AppConfig {
 
     private List<String> userAgentList;
 
-    private int webDriverWaitSecond;
+    private int webDriverFastWaitSecond;
+
+    private int webDriverSlowWaitSecond;
 
     private int checkSubmitOrderWaitSecond;
 
