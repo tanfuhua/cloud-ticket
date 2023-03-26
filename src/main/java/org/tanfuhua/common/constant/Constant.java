@@ -15,6 +15,7 @@ public class Constant {
         public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
         public static final String APPLICATION_FORM_UTF8 = "application/x-www-form-urlencoded; charset=UTF-8";
         public static final String SESSION_USER = "SESSION_USER";
+        public static final String SPRING = "spring";
     }
 
 
