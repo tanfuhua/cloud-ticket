@@ -28,6 +28,8 @@ public class AppConfig {
 
     private int webDriverWaitSecond;
 
+    private int checkSubmitOrderWaitSecond;
+
     private String kyfwUrl;
 
     private Map<String, String> kyfwUrlRefererMap;

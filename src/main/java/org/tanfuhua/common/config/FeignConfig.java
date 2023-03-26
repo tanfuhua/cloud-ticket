@@ -7,11 +7,6 @@ import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.apache.commons.collections4.CollectionUtils;
 import org.openqa.selenium.Cookie;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -29,9 +24,7 @@ import org.tanfuhua.util.StringUtil;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * @author: gaofubo
@@ -56,7 +49,7 @@ public class FeignConfig {
     public RequestInterceptor requestInterceptor() {
         return template -> {
             // referer
-            String referer = appConfig.getKyfwUrlRefererMap().get(template.url());
+            String referer = appConfig.getKyfwUrlRefererMap().get(template.url().replace("/", ""));
             if (referer != null) {
                 template.header("Referer", referer);
             }

@@ -11,10 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.tanfuhua.model.bo.UserBO;
-import org.tanfuhua.util.FunctionUtil;
-import org.tanfuhua.util.JacksonJsonUtil;
-import org.tanfuhua.util.SessionUtil;
-import org.tanfuhua.util.StringUtil;
+import org.tanfuhua.util.*;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +31,8 @@ public class OkHttpClientConfig {
     public OkHttpClient.Builder okHttpClientBuilder() {
         return new OkHttpClient
                 .Builder()
+                .hostnameVerifier(SSLUtil.createTrustHostnameVerifier())
+                .sslSocketFactory(SSLUtil.createSSLSocketFactory(), new SSLUtil.MiTM())
                 .addInterceptor(chain -> {
                     Request request = chain.request();
                     Response response = chain.proceed(request);
