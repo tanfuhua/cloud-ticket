@@ -40,13 +40,13 @@ public interface KyfwClient {
     /**
      * 检查用户状态
      */
-    @PostMapping(value = "/otn/login/checkUser", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/login/checkUser", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     String checkUser(MultiValueMap<String, Object> formData);
 
     /**
      * 提交订单请求
      */
-    @PostMapping(value = "/otn/leftTicket/submitOrderRequest", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/leftTicket/submitOrderRequest", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     String submitOrderRequest(MultiValueMap<String, Object> formData);
 
     /**
@@ -58,31 +58,31 @@ public interface KyfwClient {
     /**
      * 获取乘客信息
      */
-    @PostMapping(value = "/otn/confirmPassenger/getPassengerDTOs", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/confirmPassenger/getPassengerDTOs", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     byte[] getPassengerDTOs(MultiValueMap<String, Object> formData);
 
     /**
      * 获取乘客信息
      */
-    @PostMapping(value = "/otn/passengers/query", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/passengers/query", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     byte[] getPassengers(MultiValueMap<String, Object> formData);
 
     /**
      * 检查订单信息
      */
-    @PostMapping(value = "/otn/confirmPassenger/checkOrderInfo", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/confirmPassenger/checkOrderInfo", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     String checkOrderInfo(MultiValueMap<String, Object> formData);
 
     /**
      * 获取余票和排队信息
      */
-    @PostMapping(value = "/otn/confirmPassenger/getQueueCount", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/confirmPassenger/getQueueCount", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     String getQueueCount(MultiValueMap<String, Object> formData);
 
     /**
      * 确认单程订单
      */
-    @PostMapping(value = "/otn/confirmPassenger/confirmSingleForQueue", consumes = Constant.APPLICATION_FORM_UTF8)
+    @PostMapping(value = "/otn/confirmPassenger/confirmSingleForQueue", consumes = Constant.Str.APPLICATION_FORM_UTF8)
     String confirmSingleForQueue(MultiValueMap<String, Object> formData);
 
     /**
