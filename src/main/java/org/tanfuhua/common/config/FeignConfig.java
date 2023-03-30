@@ -61,7 +61,7 @@ public class FeignConfig {
 
             Map<String, String> cookieMap = FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new);
 
-            String cookie = StringUtil.cookieListToCookieKVString(cookieList);
+            String cookie = StringUtil.cookieListToKVString(cookieList);
             log.info("ReqCookie:{}{}:{}", userBO.getKyfwAccount(), System.lineSeparator(),
                     JacksonJsonUtil.toPrettyJsonString(cookieMap));
             template.header(HttpHeaders.COOKIE, cookie);
