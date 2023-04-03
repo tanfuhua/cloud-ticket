@@ -1,6 +1,3 @@
-/*
- * Copyright (C) 2021 Baidu, Inc. All Rights Reserved.
- */
 package org.tanfuhua.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
