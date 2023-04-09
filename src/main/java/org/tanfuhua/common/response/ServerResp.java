@@ -13,22 +13,22 @@ import org.springframework.http.ResponseEntity;
 @Setter
 public class ServerResp<T> {
     private T data;
-    private int status;
+    private int code;
     private String message;
 
     public ServerResp(HttpStatus status, T data) {
-        this.status = status.value();
+        this.code = status.value();
         this.data = data;
         this.message = status.getReasonPhrase();
     }
 
     public ServerResp(HttpStatus status) {
-        this.status = status.value();
+        this.code = status.value();
         this.message = status.getReasonPhrase();
     }
 
     public ServerResp(HttpStatus status, String message) {
-        this.status = status.value();
+        this.code = status.value();
         this.message = message;
     }
 
