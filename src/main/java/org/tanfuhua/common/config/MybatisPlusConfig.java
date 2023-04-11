@@ -47,23 +47,20 @@ public class MybatisPlusConfig {
         return new MetaObjectHandler() {
             @Override
             public void insertFill(MetaObject metaObject) {
-                log.info("start insert fill");
                 this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
                 this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
                 Optional<UserBO> userSO = SessionUtil.getUserBOOptional();
                 this.strictInsertFill(metaObject, "createUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
                 this.strictInsertFill(metaObject, "updateUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
-                log.info("end insert fill");
+                this.strictInsertFill(metaObject, "version", Long.class, 1L);
 
             }
 
             @Override
             public void updateFill(MetaObject metaObject) {
-                log.info("start update fill");
                 Optional<UserBO> userSO = SessionUtil.getUserBOOptional();
                 this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
                 this.strictUpdateFill(metaObject, "updateUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
-                log.info("end update fill");
             }
         };
     }
