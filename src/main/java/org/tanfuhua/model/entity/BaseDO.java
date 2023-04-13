@@ -23,10 +23,10 @@ public abstract class BaseDO {
     @TableId(type = IdType.AUTO)
     protected Long id;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     protected LocalDateTime createTime;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     protected Long createUserId;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
