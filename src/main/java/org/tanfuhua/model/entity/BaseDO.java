@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants
 public abstract class BaseDO {
 
     @TableId(type = IdType.AUTO)
@@ -39,7 +41,7 @@ public abstract class BaseDO {
     protected Boolean deleteFlag;
 
     @Version
-    @TableField(update = "%s+1")
-    private Long version;
+    @TableField(update = "%s+1", fill = FieldFill.INSERT_UPDATE)
+    protected Long version;
 
 }
