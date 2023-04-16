@@ -2,6 +2,7 @@ package org.tanfuhua.common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -10,7 +11,10 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.tanfuhua.common.constant.Constant;
+import org.tanfuhua.model.bo.LowcodeUserBO;
 import org.tanfuhua.model.bo.UserBO;
+import org.tanfuhua.model.entity.BaseDO;
 import org.tanfuhua.util.SessionUtil;
 
 import java.time.LocalDateTime;
@@ -47,21 +51,42 @@ public class MybatisPlusConfig {
         return new MetaObjectHandler() {
             @Override
             public void insertFill(MetaObject metaObject) {
-                this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-                this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-                Optional<UserBO> userSO = SessionUtil.getUserBOOptional();
-                this.strictInsertFill(metaObject, "createUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
-                this.strictInsertFill(metaObject, "updateUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
-                this.strictInsertFill(metaObject, "version", Long.class, 1L);
+                long userId = getUserId(metaObject);
+
+                this.strictInsertFill(metaObject, BaseDO.Fields.createTime, LocalDateTime.class, LocalDateTime.now());
+                this.strictInsertFill(metaObject, BaseDO.Fields.updateTime, LocalDateTime.class, LocalDateTime.now());
+                this.strictInsertFill(metaObject, BaseDO.Fields.createUserId, Long.class, userId);
+                this.strictInsertFill(metaObject, BaseDO.Fields.updateUserId, Long.class, userId);
+                this.strictInsertFill(metaObject, BaseDO.Fields.version, Long.class, 1L);
 
             }
 
             @Override
             public void updateFill(MetaObject metaObject) {
-                Optional<UserBO> userSO = SessionUtil.getUserBOOptional();
-                this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-                this.strictUpdateFill(metaObject, "updateUserId", Long.class, userSO.isPresent() ? userSO.get().getId() : 0L);
+                long userId = getUserId(metaObject);
+                this.strictUpdateFill(metaObject, BaseDO.Fields.updateTime, LocalDateTime.class, LocalDateTime.now());
+                this.strictUpdateFill(metaObject, BaseDO.Fields.updateUserId, Long.class, userId);
             }
+
+            private long getUserId(MetaObject metaObject) {
+                TableInfo tableInfo = findTableInfo(metaObject);
+                //
+                long userId = 0L;
+                if (tableInfo.getTableName().startsWith("lowcode")) {
+                    Optional<LowcodeUserBO> lowcodeUserBO = SessionUtil.getOptional(Constant.Str.SESSION_LOWCODE_USER, LowcodeUserBO.class);
+                    if (lowcodeUserBO.isPresent()) {
+                        userId = lowcodeUserBO.get().getId();
+                    }
+                } else {
+                    Optional<UserBO> userBO = SessionUtil.getUserBOOptional();
+                    if (userBO.isPresent()) {
+                        userId = userBO.get().getId();
+                    }
+                }
+                return userId;
+            }
+
+
         };
     }
 }
