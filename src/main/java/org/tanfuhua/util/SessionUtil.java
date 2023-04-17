@@ -10,6 +10,7 @@ import org.tanfuhua.exception.BadRequestException;
 import org.tanfuhua.model.bo.UserBO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,6 +21,9 @@ import java.util.Optional;
 @UtilityClass
 public class SessionUtil {
 
+    /**
+     * 获取HttpServletRequest
+     */
     public static HttpServletRequest getHttpServletRequest() {
         ServletRequestAttributes servletRequestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -30,6 +34,22 @@ public class SessionUtil {
     public static void setUserBO(UserBO userBO) {
         HttpServletRequest request = getHttpServletRequest();
         request.getSession().setAttribute(Constant.Str.SESSION_USER, userBO);
+    }
+
+    public static <T extends Serializable> void set(String key, T val) {
+        HttpServletRequest request = getHttpServletRequest();
+        request.getSession().setAttribute(key, val);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public static <T> Optional<T> getOptional(String key, Class<T> tClass) {
+        HttpServletRequest request = getHttpServletRequest();
+        Object val = request.getSession().getAttribute(key);
+        return Optional.ofNullable((T) val);
+    }
+
+    public static <T> T get(String key, Class<T> tClass) {
+        return getOptional(key, tClass).orElseThrow(() -> new BadRequestException("请重新登录！"));
     }
 
 
