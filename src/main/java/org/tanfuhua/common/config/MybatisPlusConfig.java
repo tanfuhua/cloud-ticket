@@ -12,7 +12,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.tanfuhua.common.constant.Constant;
-import org.tanfuhua.model.bo.LowcodeUserBO;
+//import org.tanfuhua.model.bo.LowcodeUserBO;
 import org.tanfuhua.model.bo.UserBO;
 import org.tanfuhua.model.entity.BaseDO;
 import org.tanfuhua.util.SessionUtil;
@@ -73,10 +73,10 @@ public class MybatisPlusConfig {
                 //
                 long userId = 0L;
                 if (tableInfo.getTableName().startsWith("lowcode")) {
-                    Optional<LowcodeUserBO> lowcodeUserBO = SessionUtil.getOptional(Constant.Str.SESSION_LOWCODE_USER, LowcodeUserBO.class);
-                    if (lowcodeUserBO.isPresent()) {
-                        userId = lowcodeUserBO.get().getId();
-                    }
+//                    Optional<LowcodeUserBO> lowcodeUserBO = SessionUtil.getOptional(Constant.Str.SESSION_LOWCODE_USER, LowcodeUserBO.class);
+//                    if (lowcodeUserBO.isPresent()) {
+//                        userId = lowcodeUserBO.get().getId();
+//                    }
                 } else {
                     Optional<UserBO> userBO = SessionUtil.getUserBOOptional();
                     if (userBO.isPresent()) {
