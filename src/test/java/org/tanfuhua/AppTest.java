@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.tanfuhua.common.constant.Constant;
 import org.tanfuhua.util.DateUtil;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Locale;
 
@@ -17,6 +19,16 @@ public class AppTest {
     /**
      * Rigorous Test :-)
      */
+
+    @Test
+    public void testLocalHost() throws UnknownHostException {
+        long s = System.currentTimeMillis();
+        InetAddress localHost = InetAddress.getLocalHost();
+        long e = System.currentTimeMillis();
+        System.out.println(localHost);
+        System.out.println(e - s);
+    }
+
     @Test
     public void shouldAnswerWithTrue() {
         System.setProperty("webdriver.chrome.driver", "/Users/gaofubo/Software/Mac/chromedriver_mac64/chromedriver_111.0.5563.64");
