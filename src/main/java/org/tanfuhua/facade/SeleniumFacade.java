@@ -10,8 +10,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.tanfuhua.common.config.AppConfig;
 
+import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -49,12 +51,17 @@ public class SeleniumFacade implements InitializingBean {
     public WebDriverWait createWebDriverFastWait(ChromeDriver chromeDriver) {
         return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getWebDriverFastWaitSecond()));
     }
+
     public WebDriverWait createWebDriverSlowWait(ChromeDriver chromeDriver) {
         return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getWebDriverSlowWaitSecond()));
     }
 
     @Override
     public void afterPropertiesSet() {
-        System.setProperty("webdriver.chrome.driver", appConfig.getChromeDriverPath());
+        URL url = appConfig.getClass().getResource(appConfig.getChromeDriverPath());
+        if (Objects.isNull(url)) {
+            throw new RuntimeException(String.format("路径：%s不存在driver", appConfig.getChromeDriverPath()));
+        }
+        System.setProperty("webdriver.chrome.driver", url.getFile());
     }
 }

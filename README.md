@@ -29,3 +29,5 @@ sudo keytool -import -noprompt -trustcacerts -alias 12306.cn.cer -keystore /Libr
 sudo keytool -import -file 12306.cn.cer -keystore 12306.cn.cer.keystore
 ```
 
+### chromedriver
+下载路径：https://registry.npmmirror.com/binary.html?path=chromedriver/
