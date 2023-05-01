@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("lowcode_schema")
-public class LowcodeSchemaDO extends BaseDO{
+@TableName("lowcode_scenario")
+public class LowcodeScenarioDO extends BaseDO{
 
     private String name;
 
