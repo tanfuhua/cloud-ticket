@@ -16,6 +16,12 @@ public class LowcodeScenarioDO extends BaseDO{
 
     private String name;
 
+    private String path;
+
+    private String icon;
+
+    private String config;
+
     @TableField("`schema`")
     private String schema;
 
