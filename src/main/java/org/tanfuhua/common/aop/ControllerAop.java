@@ -1,13 +1,18 @@
 package org.tanfuhua.common.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.tanfuhua.common.response.RespStatusEnum;
 import org.tanfuhua.common.response.ServerResp;
 import org.tanfuhua.exception.BadRequestException;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 
 /**
@@ -18,19 +23,46 @@ import org.tanfuhua.exception.BadRequestException;
 @Slf4j
 public class ControllerAop {
 
-    @ExceptionHandler({BadRequestException.class, IllegalArgumentException.class})
+    @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<ServerResp<Void>> handleBadRequestException(Exception e) {
         String message = e.getMessage();
-        if (StringUtils.isNotBlank(message) && message.startsWith("Invalid parameters")) {
+        log.error(message);
+        return new ResponseEntity<>(new ServerResp<>(RespStatusEnum.ERROR.getStatus(), message), HttpStatus.OK);
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<ServerResp<Void>> handleArgumentException(Exception e) {
+        String message = RespStatusEnum.ERROR.getMsg();
+        if (e instanceof IllegalArgumentException) {
+            IllegalArgumentException illegalArgumentException = (IllegalArgumentException) e;
             message = message.replace("Invalid parameters", "非法参数");
+        } else if (e instanceof MethodArgumentNotValidException) {
+            // @Valid异常处理
+            MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
+            message = methodArgumentNotValidException
+                    .getBindingResult()
+                    .getFieldErrors()
+                    .stream()
+                    .findAny()
+                    .map(FieldError::getDefaultMessage)
+                    .orElse(RespStatusEnum.ERROR.getMsg());
+        } else if (e instanceof ConstraintViolationException) {
+            ConstraintViolationException constraintViolationException = (ConstraintViolationException) e;
+            message = constraintViolationException
+                    .getConstraintViolations()
+                    .stream()
+                    .findAny()
+                    .map(ConstraintViolation::getMessage)
+                    .orElse(RespStatusEnum.ERROR.getMsg());
         }
-        return new ResponseEntity<>(new ServerResp<>(HttpStatus.BAD_REQUEST, message), HttpStatus.BAD_REQUEST);
+        log.error(message);
+        return new ResponseEntity<>(new ServerResp<>(RespStatusEnum.ERROR.getStatus(), message), HttpStatus.OK);
     }
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ServerResp<Void>> handleServerException(Throwable e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new ServerResp<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ServerResp<>(RespStatusEnum.ERROR.getStatus(), e.getMessage()), HttpStatus.OK);
     }
 
 }
