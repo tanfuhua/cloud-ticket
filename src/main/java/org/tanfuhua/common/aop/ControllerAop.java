@@ -1,6 +1,7 @@
 package org.tanfuhua.common.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.tanfuhua.common.response.RespStatusEnum;
 import org.tanfuhua.common.response.ServerResp;
 import org.tanfuhua.exception.BadRequestException;
+import org.tanfuhua.exception.LoginExpireException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -28,6 +30,13 @@ public class ControllerAop {
         String message = e.getMessage();
         log.error(message);
         return new ResponseEntity<>(new ServerResp<>(RespStatusEnum.ERROR.getStatus(), message), HttpStatus.OK);
+    }
+
+    @ExceptionHandler({LoginExpireException.class})
+    public ResponseEntity<ServerResp<Void>> handleLoginExpireException(Exception e) {
+        String message = StringUtils.isBlank(e.getMessage()) ? RespStatusEnum.LOGIN_EXPIRE.getMsg() : e.getMessage();
+        log.error(message);
+        return new ResponseEntity<>(new ServerResp<>(RespStatusEnum.LOGIN_EXPIRE.getStatus(), message), HttpStatus.OK);
     }
 
     @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class})
