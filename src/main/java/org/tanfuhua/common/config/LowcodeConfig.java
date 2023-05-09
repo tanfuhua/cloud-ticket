@@ -19,6 +19,5 @@ public class LowcodeConfig {
     private String password;
     private String config;
     private String schema;
-    private String packages;
 
 }
