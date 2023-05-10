@@ -10,7 +10,9 @@ import lombok.Getter;
 public enum RespStatusEnum {
 
     OK(0, "OK"),
-    ERROR(1000, "ERROR");
+    ERROR(1000, "ERROR"),
+    LOGIN_EXPIRE(1010, "登录失效"),
+    ;
 
     private final int status;
     private final String msg;
