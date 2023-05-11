@@ -7,6 +7,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.tanfuhua.common.constant.Constant;
 import org.tanfuhua.exception.BadRequestException;
+import org.tanfuhua.exception.LoginExpireException;
 import org.tanfuhua.model.bo.UserBO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,12 +50,12 @@ public class SessionUtil {
     }
 
     public static <T> T get(String key, Class<T> tClass) {
-        return getOptional(key, tClass).orElseThrow(() -> new BadRequestException("请重新登录！"));
+        return getOptional(key, tClass).orElseThrow(() -> new LoginExpireException("请重新登录！"));
     }
 
 
     public static UserBO getUserBO() {
-        return getUserBOOptional().orElseThrow(() -> new BadRequestException("请重新登录！"));
+        return getUserBOOptional().orElseThrow(() -> new LoginExpireException("请重新登录！"));
     }
 
     public static Optional<UserBO> getUserBOOptional() {
