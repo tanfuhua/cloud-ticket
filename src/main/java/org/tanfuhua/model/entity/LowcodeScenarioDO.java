@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("lowcode_scenario")
-public class LowcodeScenarioDO extends BaseDO{
+public class LowcodeScenarioDO extends BaseDO {
 
     private String name;
 
@@ -24,7 +24,5 @@ public class LowcodeScenarioDO extends BaseDO{
 
     @TableField("`schema`")
     private String schema;
-
-    private String packages;
 
 }
