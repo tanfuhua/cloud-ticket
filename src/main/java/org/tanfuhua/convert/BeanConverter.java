@@ -4,15 +4,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.tanfuhua.common.constant.Constant;
-//import org.tanfuhua.controller.vo.request.LowcodeSchemaCreateReqVO;
+import org.tanfuhua.controller.vo.request.LowcodeScenarioCreateReqVO;
 import org.tanfuhua.controller.vo.response.KyfwInfoRespVO;
 import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
 import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
-//import org.tanfuhua.controller.vo.response.LowcodeSchemaRespVO;
+import org.tanfuhua.controller.vo.response.LowcodeScenarioRespVO;
 import org.tanfuhua.model.bo.KyfwPassengerRespBO;
 import org.tanfuhua.model.bo.KyfwTrainStationRespBO;
 import org.tanfuhua.model.bo.UserBO;
-//import org.tanfuhua.model.entity.LowcodeSchemaDO;
+import org.tanfuhua.model.entity.LowcodeScenarioDO;
 import org.tanfuhua.model.entity.UserDO;
 
 /**
@@ -45,12 +45,12 @@ public interface BeanConverter {
     KyfwPassengerRespVO kyfwPassengerRespBOToVO(KyfwPassengerRespBO kyfwPassengerRespBO);
 
     /**
-     * SchemaCreateReqVO -> LowcodeSchemaDO
+     * SchemaCreateReqVO -> LowcodeScenarioDO
      */
-//    LowcodeSchemaDO schemaReqVOToDO(LowcodeSchemaCreateReqVO reqVO);
+    LowcodeScenarioDO scenarioReqVOToDO(LowcodeScenarioCreateReqVO reqVO);
 
     /**
-     * LowcodeSchemaDO -> LowcodeSchemaRespVO
+     * LowcodeScenarioDO -> LowcodeScenarioRespVO
      */
-//    LowcodeSchemaRespVO schemaDOToRespVO(LowcodeSchemaDO lowcodeSchemaDO);
+    LowcodeScenarioRespVO scenarioDOToRespVO(LowcodeScenarioDO lowcodeScenarioDO);
 }
