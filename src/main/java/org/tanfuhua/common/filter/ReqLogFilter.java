@@ -1,7 +1,6 @@
 package org.tanfuhua.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +21,10 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 import static org.springframework.web.util.WebUtils.getNativeRequest;
@@ -116,16 +118,23 @@ public class ReqLogFilter extends OncePerRequestFilter {
 
     private RequestBO createRequestVO(HttpServletRequest request, HttpServletResponse response, long duration,
                                       String requestPayload, String responsePayload) {
+        Map<String, String> headers = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (Objects.nonNull(headerNames)) {
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                headers.put(headerName, request.getHeader(headerName));
+            }
+        }
         return RequestBO.builder()
                 .status(response.getStatus())
                 .duration(duration)
+                .protocol(request.getProtocol())
+                .method(request.getMethod())
                 .uri(request.getRequestURI())
                 .queryParams(request.getQueryString())
-                .method(request.getMethod())
-                .protocol(request.getProtocol())
                 .requestIp(getRemoteAddr(request))
-                .headers(ImmutableMap.of("Accept:", String.valueOf(request.getHeader("Accept")), "Content-Type:",
-                        String.valueOf(request.getHeader("Content-Type"))))
+                .headers(headers)
                 .requestBody(requestPayload)
                 .responseBody(responsePayload)
                 .build();
@@ -166,14 +175,13 @@ public class ReqLogFilter extends OncePerRequestFilter {
     @Data
     @Builder
     private static class RequestBO implements Serializable {
-
         private static final long serialVersionUID = 7646097845423976197L;
-        private Integer status;
-        private Long duration;
+        private String protocol;
+        private String method;
         private String uri;
         private String queryParams;
-        private String method;
-        private String protocol;
+        private Integer status;
+        private Long duration;
         private Map<String, String> headers;
         private String requestIp;
         private String requestBody;
