@@ -11,7 +11,6 @@ import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
 import org.tanfuhua.controller.vo.response.LowcodeScenarioRespVO;
 import org.tanfuhua.model.bo.KyfwPassengerRespBO;
 import org.tanfuhua.model.bo.KyfwTrainStationRespBO;
-import org.tanfuhua.model.bo.UserBO;
 import org.tanfuhua.model.entity.LowcodeScenarioDO;
 import org.tanfuhua.model.entity.UserDO;
 
@@ -23,16 +22,10 @@ import org.tanfuhua.model.entity.UserDO;
 public interface BeanConverter {
 
     /**
-     * UserDO -> UserBO
-     */
-    @Mapping(target = "kyfwBrowserBO", ignore = true)
-    UserBO userDOToBO(UserDO userDO);
-
-    /**
      * UserBO -> KyfwInfoRespVO
      */
     @Mapping(source = "isLogin", target = KyfwInfoRespVO.Fields.isLogin)
-    KyfwInfoRespVO userBOToKyfwInfoRespVO(UserBO userBO, boolean isLogin);
+    KyfwInfoRespVO userDOToKyfwInfoRespVO(UserDO userDO, boolean isLogin);
 
     /**
      * KyfwTrainStationRespBO -> KyfwTrainStationRespVO
