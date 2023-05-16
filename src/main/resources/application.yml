@@ -1,8 +1,5 @@
 server:
   port: 8101
-  servlet:
-    session:
-      timeout: 3600s
 spring:
   datasource:
     druid:
@@ -52,6 +49,12 @@ lowcode:
   password: 123456
   config: "{\"theme\":\"cxd\",\"asideFixed\":true,\"asideFolded\":false,\"offScreen\":false,\"addPageIsOpen\":true,\"preview\":false,\"isMobile\":false}"
   schema: "{\"type\":\"page\",\"title\":\"低代码页面\",\"body\":\"这是你刚刚新增的页面。\"}"
+
+token:
+  secret: 54D485D4B2D288C8DE67906551CEF7AD4F8CE6D5C7ACCFEC4A205A64FB17D4D9
+  # 1天=24 * 60 * 60
+  timeout-second: 86400
+  refresh-time-second: 1800
 
 app:
   kyfw-url: https://kyfw.12306.cn/otn/view/index.html
