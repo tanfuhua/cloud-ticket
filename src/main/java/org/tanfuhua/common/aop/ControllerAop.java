@@ -44,7 +44,7 @@ public class ControllerAop {
         String message = RespStatusEnum.ERROR.getMsg();
         if (e instanceof IllegalArgumentException) {
             IllegalArgumentException illegalArgumentException = (IllegalArgumentException) e;
-            message = message.replace("Invalid parameters", "非法参数");
+            message = illegalArgumentException.getMessage().replace("Invalid parameters", "非法参数");
         } else if (e instanceof MethodArgumentNotValidException) {
             // @Valid异常处理
             MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
