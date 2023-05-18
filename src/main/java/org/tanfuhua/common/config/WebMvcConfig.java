@@ -1,12 +1,16 @@
 package org.tanfuhua.common.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.tanfuhua.common.interceptor.AuthorizationInterceptor;
 
 /**
  * @author gaofubo
@@ -14,6 +18,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurationSupport {
+
+    @Autowired
+    private AuthorizationInterceptor authorizationInterceptor;
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authorizationInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        // swagger doc
+                        "/doc.html",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+                        "/favicon.ico",
+                        "/v2/api-docs",
+                        "/v2/api-docs-ext",
+                        "/error",
+                        // 登录
+                        "/v1/lowcode/login",
+                        // 低代码scenario
+                        "/v1/lowcode/scenario/encrypt"
+                );
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -28,6 +55,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addExposedHeader(HttpHeaders.AUTHORIZATION);
         return corsConfiguration;
     }
     @Bean
