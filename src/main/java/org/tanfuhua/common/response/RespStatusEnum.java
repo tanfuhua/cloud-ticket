@@ -11,7 +11,7 @@ public enum RespStatusEnum {
 
     OK(0, "OK"),
     ERROR(1000, "ERROR"),
-    LOGIN_EXPIRE(1010, "登录失效"),
+    LOGIN_EXPIRE(1010, "请重新登录"),
     ;
 
     private final int status;
