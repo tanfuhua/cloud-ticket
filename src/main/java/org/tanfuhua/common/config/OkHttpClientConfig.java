@@ -10,12 +10,15 @@ import org.openqa.selenium.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.tanfuhua.model.bo.UserBO;
+import org.tanfuhua.facade.KyfwFacade;
+import org.tanfuhua.model.bo.KyfwBrowserBO;
+import org.tanfuhua.model.entity.UserDO;
+import org.tanfuhua.service.UserService;
 import org.tanfuhua.util.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,11 @@ import java.util.stream.Collectors;
 @Configuration
 public class OkHttpClientConfig {
 
+    @Resource
+    private UserService userService;
+    @Resource
+    private KyfwFacade kyfwFacade;
+
     @Bean
     public OkHttpClient.Builder okHttpClientBuilder() {
         return new OkHttpClient
@@ -37,10 +45,6 @@ public class OkHttpClientConfig {
                     Request request = chain.request();
                     Response response = chain.proceed(request);
                     // set-cookie逻辑
-                    Optional<UserBO> userSoOptional = SessionUtil.getUserBOOptional();
-                    if (!userSoOptional.isPresent()) {
-                        return response;
-                    }
                     Headers headers = response.headers();
                     Map<String, List<String>> headerMultiMap = headers.toMultimap();
                     List<String> setCookieList = headerMultiMap.get(HttpHeaders.SET_COOKIE);
@@ -49,7 +53,10 @@ public class OkHttpClientConfig {
                     }
                     log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(setCookieList));
                     List<Cookie> cookieList = setCookieList.stream().map(StringUtil::stringToCookie).collect(Collectors.toList());
-                    SessionUtil.getUserBO().getKyfwBrowserBO().setCookieList(cookieList);
+                    Long userId = ContextUtil.UserHolder.getUserId();
+                    UserDO userDO = userService.getById(userId);
+                    KyfwBrowserBO browserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
+                    browserBO.setCookieList(cookieList);
                     log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new)));
                     return response;
                 });
