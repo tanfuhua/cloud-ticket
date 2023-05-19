@@ -5,23 +5,30 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tanfuhua.common.constant.Constant;
 import org.tanfuhua.controller.vo.request.KyfwBookTrainTicketReqVO;
+import org.tanfuhua.controller.vo.request.KyfwLoginReqVO;
 import org.tanfuhua.controller.vo.request.KyfwQueryTicketReqVO;
+import org.tanfuhua.controller.vo.response.KyfwInfoRespVO;
 import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
 import org.tanfuhua.controller.vo.response.KyfwRemainingTicketRespVO;
 import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
 import org.tanfuhua.convert.BeanConverter;
+import org.tanfuhua.enums.BookTypeEnum;
 import org.tanfuhua.enums.KyfwSeatTypeEnum;
 import org.tanfuhua.exception.BadRequestException;
 import org.tanfuhua.model.bo.*;
+import org.tanfuhua.model.entity.UserConfigDO;
+import org.tanfuhua.model.entity.UserDO;
+import org.tanfuhua.service.UserConfigService;
+import org.tanfuhua.service.UserService;
+import org.tanfuhua.util.ContextUtil;
 import org.tanfuhua.util.DateUtil;
 import org.tanfuhua.util.FunctionUtil;
+import org.tanfuhua.util.JacksonJsonUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,6 +43,59 @@ public class TrainTicketFacade {
 
     private final BeanConverter beanConverter;
     private final KyfwFacade kyfwFacade;
+    private final UserService userService;
+    private final UserConfigService userConfigService;
+
+
+    /**
+     * 12306登录
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void kyfwLogin(KyfwLoginReqVO reqVO) {
+        String account = reqVO.getAccount();
+        String password = reqVO.getPassword();
+
+        KyfwBrowserBO kyfwBrowserBO = kyfwFacade.createKyfwBrowserBO(account);
+
+        kyfwBrowserBO.login(new KyfwLoginBO(account, password));
+
+        UserDO userDO = userService.getByUserName(kyfwBrowserBO.getUserName());
+        if (Objects.isNull(userDO)) {
+            // 新建UserPO
+            userDO = new UserDO();
+            userDO.setUserName(kyfwBrowserBO.getUserName());
+            userDO.setRealName(kyfwBrowserBO.getRealName());
+            userDO.setKyfwAccount(account);
+            userDO.setKyfwPassword(password);
+            userService.save(userDO);
+            // 新建UserConfigPO
+            UserConfigDO userConfigPO = new UserConfigDO();
+            userConfigPO.setUserId(userDO.getId());
+            userConfigPO.setStartBookInfo(JacksonJsonUtil.DEFAULT_OBJECT_JSON_STRING);
+            userConfigPO.setCookieValidStatus(false);
+            userConfigPO.setScheduleTime(new Date());
+            userConfigPO.setRunStatus(false);
+            userConfigPO.setBookType(BookTypeEnum.INITIAL);
+            userConfigPO.setUserAgentIndex(1);
+            userConfigService.save(userConfigPO);
+        } else if (!userDO.getKyfwAccount().equals(account) || !userDO.getKyfwPassword().equals(password)) {
+            UserDO updateUser = new UserDO();
+            updateUser.setId(userDO.getId());
+            updateUser.setKyfwAccount(account);
+            updateUser.setKyfwPassword(password);
+            userService.updateById(updateUser);
+        }
+    }
+
+    /**
+     * 12306信息
+     */
+    public KyfwInfoRespVO kyfwInfo() {
+        Long userId = ContextUtil.UserHolder.getUserId();
+        UserDO userDO = userService.getById(userId);
+        KyfwBrowserBO kyfwBrowserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
+        return beanConverter.userDOToKyfwInfoRespVO(userDO, kyfwBrowserBO.isLogin());
+    }
 
     /**
      * 获取乘客信息
@@ -56,8 +116,8 @@ public class TrainTicketFacade {
     /**
      * 查询火车票余票
      */
-    public List<KyfwRemainingTicketRespVO> queryRemainingTicketList(KyfwQueryTicketReqVO reqVO) {
-        return kyfwFacade.queryRemainingTicketList(reqVO.getTrainDate(), reqVO.getFromStation(),
+    public KyfwRemainingTicketRespVO queryRemainingTicketList(KyfwQueryTicketReqVO reqVO) {
+        return kyfwFacade.queryRemainingTicket(reqVO.getTrainDate(), reqVO.getFromStation(),
                 reqVO.getToStation(), reqVO.getPurposeCode());
     }
 
@@ -72,9 +132,9 @@ public class TrainTicketFacade {
 
         // 获取火车票余票信息
         KyfwQueryTicketReqVO queryTicketReqVO = reqVO.getQueryTicketReqVO();
-        List<KyfwRemainingTicketRespVO> remainingTicketList = kyfwFacade.queryRemainingTicketList(queryTicketReqVO.getTrainDate(), queryTicketReqVO.getFromStation(), queryTicketReqVO.getToStation(), queryTicketReqVO.getPurposeCode());
-        Map<String, KyfwRemainingTicketRespVO> remainingTicketMap = FunctionUtil.convertCollToMap(remainingTicketList, kyfwRemainingTicketRespVO -> kyfwRemainingTicketRespVO.getStationTrainCode() + "_" + kyfwRemainingTicketRespVO.getTrainNo(), Function.identity());
-        KyfwRemainingTicketRespVO remainingTicket = remainingTicketMap.get(reqVO.getStationTrainCode() + "_" + reqVO.getTrainNo());
+        List<KyfwRemainingTicketRespVO.Ticket> remainingTicketList = kyfwFacade.queryRemainingTicket(queryTicketReqVO.getTrainDate(), queryTicketReqVO.getFromStation(), queryTicketReqVO.getToStation(), queryTicketReqVO.getPurposeCode()).getTicketList();
+        Map<String, KyfwRemainingTicketRespVO.Ticket> remainingTicketMap = FunctionUtil.convertCollToMap(remainingTicketList, ticket -> ticket.getStationTrainCode() + "_" + ticket.getTrainNo(), Function.identity());
+        KyfwRemainingTicketRespVO.Ticket remainingTicket = remainingTicketMap.get(reqVO.getStationTrainCode() + "_" + reqVO.getTrainNo());
 
         // 提交订单请求
         KyfwSubmitTicketOrderBO submitTicketOrderBO = new KyfwSubmitTicketOrderBO();

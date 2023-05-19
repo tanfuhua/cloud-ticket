@@ -15,8 +15,7 @@ public class Constant {
         public static final String DATE_TIME_KYFW_FORMAT = "EEE MMM dd yyyy HH:mm:ss z (中国标准时间)";
         public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
         public static final String APPLICATION_FORM_UTF8 = "application/x-www-form-urlencoded; charset=UTF-8";
-        public static final String SESSION_USER = "SESSION_USER";
-        public static final String SESSION_LOWCODE_USER = "SESSION_LOWCODE_USER";
+        public static final String LOWCODE_TOKEN_USER_ID = "userId";
         public static final String SPRING = "spring";
         public static final String GMT_PLUS_8_STR = "GMT+8";
     }

@@ -163,7 +163,7 @@ public class KyfwBrowserBO {
         ThreadUtil.sleep(1000);
         // 如果有弹窗，关闭弹窗
         closeTipMask();
-        logCookie(SessionUtil.getUserBO().getKyfwAccount());
+//        logCookie(SessionUtil.getUserBO().getKyfwAccount());
     }
 
     /**

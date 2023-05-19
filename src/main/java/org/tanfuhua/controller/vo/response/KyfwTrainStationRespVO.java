@@ -12,10 +12,11 @@ import java.io.Serializable;
 @ApiModel("火车站")
 public class KyfwTrainStationRespVO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
+    private String id;
     private String shortLetter;
     private String chineseName;
     private String englishName;
     private String allLetter;
     private String firstLetter;
+    private String city;
 }

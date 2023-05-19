@@ -10,12 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.tanfuhua.common.constant.Constant;
+import org.tanfuhua.common.response.ListRespVO;
 import org.tanfuhua.common.response.ServerResp;
 import org.tanfuhua.controller.vo.request.KyfwBookTrainTicketReqVO;
+import org.tanfuhua.controller.vo.request.KyfwLoginReqVO;
 import org.tanfuhua.controller.vo.request.KyfwQueryTicketReqVO;
+import org.tanfuhua.controller.vo.response.KyfwInfoRespVO;
 import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
-import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
 import org.tanfuhua.controller.vo.response.KyfwRemainingTicketRespVO;
+import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
 import org.tanfuhua.facade.TrainTicketFacade;
 
 import javax.validation.Valid;
@@ -36,6 +39,35 @@ public class KyfwTrainTicketController {
     private final TrainTicketFacade trainTicketFacade;
 
     /**
+     * 12306信息
+     */
+    @ApiOperation("12306信息")
+    @GetMapping(value = "/kyfwInfo", produces = Constant.Str.APPLICATION_JSON_UTF8)
+    public ResponseEntity<ServerResp<KyfwInfoRespVO>> kyfwInfo() {
+        KyfwInfoRespVO responseVo = trainTicketFacade.kyfwInfo();
+        return ServerResp.createRespEntity(responseVo, HttpStatus.OK);
+    }
+
+    /**
+     * 12306登录
+     */
+    @ApiOperation("12306登录")
+    @PostMapping(value = "/kyfwLogin", produces = Constant.Str.APPLICATION_JSON_UTF8)
+    public ResponseEntity<ServerResp<Void>> kyfwLogin(@RequestBody KyfwLoginReqVO reqVO) {
+        trainTicketFacade.kyfwLogin(reqVO);
+        return ServerResp.createRespEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 12306注销
+     */
+    @ApiOperation("12306注销")
+    @GetMapping(value = "/kyfwLogout", produces = Constant.Str.APPLICATION_JSON_UTF8)
+    public ResponseEntity<ServerResp<Void>> kyfwLogout() {
+        return ServerResp.createRespEntity(HttpStatus.OK);
+    }
+
+    /**
      * 获取乘客信息
      */
     @ApiOperation("获取乘客信息")
@@ -50,9 +82,9 @@ public class KyfwTrainTicketController {
      */
     @ApiOperation("获取所有车站信息")
     @GetMapping(value = "/stationList", produces = Constant.Str.APPLICATION_JSON_UTF8)
-    public ResponseEntity<ServerResp<List<KyfwTrainStationRespVO>>> getStationList() {
+    public ResponseEntity<ServerResp<ListRespVO<KyfwTrainStationRespVO>>> getStationList() {
         List<KyfwTrainStationRespVO> kyfwTrainStationRespBOList = trainTicketFacade.getStationList();
-        return ServerResp.createRespEntity(kyfwTrainStationRespBOList, HttpStatus.OK);
+        return ServerResp.createRespEntity(new ListRespVO<>(kyfwTrainStationRespBOList), HttpStatus.OK);
     }
 
     /**
@@ -60,9 +92,9 @@ public class KyfwTrainTicketController {
      */
     @ApiOperation("查询火车票余票")
     @PostMapping(value = "/ticketList", produces = Constant.Str.APPLICATION_JSON_UTF8)
-    public ResponseEntity<ServerResp<List<KyfwRemainingTicketRespVO>>> queryRemainingTicketList(@Valid @RequestBody KyfwQueryTicketReqVO reqVO) {
-        List<KyfwRemainingTicketRespVO> ticketList = trainTicketFacade.queryRemainingTicketList(reqVO);
-        return ServerResp.createRespEntity(ticketList, HttpStatus.OK);
+    public ResponseEntity<ServerResp<KyfwRemainingTicketRespVO>> queryRemainingTicketList(@Valid @RequestBody KyfwQueryTicketReqVO reqVO) {
+        KyfwRemainingTicketRespVO ticketRespVO = trainTicketFacade.queryRemainingTicketList(reqVO);
+        return ServerResp.createRespEntity(ticketRespVO, HttpStatus.OK);
     }
 
     /**

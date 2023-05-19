@@ -4,7 +4,6 @@ package org.tanfuhua.facade;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -32,6 +31,7 @@ import org.tanfuhua.util.JacksonJsonUtil;
 import org.tanfuhua.util.StringUtil;
 import org.tanfuhua.util.ThreadUtil;
 
+import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
  * @date: 2021/1/23
  */
 @Component
-@AllArgsConstructor
 @Slf4j
 public class KyfwFacade {
 
@@ -55,11 +54,14 @@ public class KyfwFacade {
 
     private static final Map<String, KyfwBrowserBO> accountAndBrowserMap = new ConcurrentHashMap<>();
 
-    private final KyfwClient kyfwClient;
+    @Resource
+    private KyfwClient kyfwClient;
 
-    private final SeleniumFacade seleniumFacade;
+    @Resource
+    private SeleniumFacade seleniumFacade;
 
-    private final AppConfig appConfig;
+    @Resource
+    private AppConfig appConfig;
 
 
     public KyfwBrowserBO createKyfwBrowserBO(String account) {
@@ -107,7 +109,7 @@ public class KyfwFacade {
         String str = responseStr.split("'")[1];
         // @bjb|北京北|VAP|beijingbei|bjb|0@bjd|北京东|BOP|beijingdong|bjd|1@bji|北京|BJP|beijing|bj
         String[] name = str.split("\\|");
-        List<KyfwTrainStationRespBO> kyfwTrainStationRespBOList = new ArrayList<>(name.length / 5 + 1);
+        List<KyfwTrainStationRespBO> kyfwTrainStationRespBOList = new ArrayList<>(name.length / 9 + 1);
         for (int i = 0; i < name.length; ) {
             KyfwTrainStationRespBO station = new KyfwTrainStationRespBO();
             // @bjb
@@ -116,7 +118,7 @@ public class KyfwFacade {
             if (idAndShortLetter.length < 2) {
                 break;
             }
-            station.setId(StringUtils.isBlank(idAndShortLetter[0]) ? -1 : Integer.parseInt(idAndShortLetter[0]));
+            station.setId(idAndShortLetter[0]);
             station.setShortLetter(idAndShortLetter[1]);
             // 北京北
             station.setChineseName(name[i++]);
@@ -126,6 +128,13 @@ public class KyfwFacade {
             station.setAllLetter(name[i++]);
             // bjb
             station.setFirstLetter(name[i++]);
+            //
+            i++;
+            i++;
+            if (i < name.length) {
+                station.setCity(name[i++]);
+            }
+            i++;
             kyfwTrainStationRespBOList.add(station);
         }
         return kyfwTrainStationRespBOList;
@@ -134,10 +143,10 @@ public class KyfwFacade {
     /**
      * 查询火车票余票
      */
-    public List<KyfwRemainingTicketRespVO> queryRemainingTicketList(String trainDate,
-                                                                    String fromStation,
-                                                                    String toStation,
-                                                                    KyfwPurposeCodeEnum purposeCode) {
+    public KyfwRemainingTicketRespVO queryRemainingTicket(String trainDate,
+                                                          String fromStation,
+                                                          String toStation,
+                                                          KyfwPurposeCodeEnum purposeCode) {
         try {
             // 查询
             byte[] bytes = kyfwClient.leftTicketQuery(trainDate, fromStation, toStation, purposeCode.getCode());
@@ -165,15 +174,17 @@ public class KyfwFacade {
     /**
      * 解析12306车票信息
      */
-    private List<KyfwRemainingTicketRespVO> parseRemainingTicket(KyfwRemainingTicketRespBO ticketRespBO) {
+    private KyfwRemainingTicketRespVO parseRemainingTicket(KyfwRemainingTicketRespBO ticketRespBO) {
         if (!ticketRespBO.getFlag()) {
             throw new KyfwException(KyfwExceptionEnum.BAD_COOKIE);
         }
         Map<String, String> map = ticketRespBO.getMap();
         List<String> ticketStrList = ticketRespBO.getResult();
-        List<KyfwRemainingTicketRespVO> ticketList = new ArrayList<>(ticketStrList.size());
+        List<KyfwRemainingTicketRespVO.Ticket> ticketList = new ArrayList<>(ticketStrList.size());
+        List<KyfwRemainingTicketRespVO.Station> fromStationList = new ArrayList<>(ticketStrList.size());
+        List<KyfwRemainingTicketRespVO.Station> toStationList = new ArrayList<>(ticketStrList.size());
         for (String ticketStr : ticketStrList) {
-            KyfwRemainingTicketRespVO ticket = new KyfwRemainingTicketRespVO();
+            KyfwRemainingTicketRespVO.Ticket ticket = new KyfwRemainingTicketRespVO.Ticket();
             String[] splitArr = ticketStr.split("\\|");
             ticket.setSecretStr(splitArr[0]);
             ticket.setButtonTextInfo(splitArr[1]);
@@ -220,8 +231,23 @@ public class KyfwFacade {
             ticket.setFromStationName(map.get(splitArr[6]));
             ticket.setToStationName(map.get(splitArr[7]));
             ticketList.add(ticket);
+
+            KyfwRemainingTicketRespVO.Station fromStation = new KyfwRemainingTicketRespVO.Station();
+            fromStation.setStationName(ticket.getFromStationName());
+            fromStation.setStationNameTelecode(ticket.getFromStationTelecode());
+            fromStationList.add(fromStation);
+
+            KyfwRemainingTicketRespVO.Station toStation = new KyfwRemainingTicketRespVO.Station();
+            toStation.setStationName(ticket.getToStationName());
+            toStation.setStationNameTelecode(ticket.getToStationTelecode());
+            toStationList.add(toStation);
         }
-        return ticketList;
+
+        KyfwRemainingTicketRespVO respVO = new KyfwRemainingTicketRespVO();
+        respVO.setTicketList(ticketList);
+        respVO.setFromStationList(fromStationList.stream().distinct().collect(Collectors.toList()));
+        respVO.setToStationList(toStationList.stream().distinct().collect(Collectors.toList()));
+        return respVO;
     }
 
 

@@ -7,10 +7,11 @@ import lombok.Data;
  */
 @Data
 public class KyfwTrainStationRespBO {
-    private Integer id;
+    private String id;
     private String shortLetter;
     private String chineseName;
     private String englishName;
     private String allLetter;
     private String firstLetter;
+    private String city;
 }

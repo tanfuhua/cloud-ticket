@@ -15,13 +15,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
+import org.tanfuhua.facade.KyfwFacade;
 import org.tanfuhua.model.bo.KyfwBrowserBO;
-import org.tanfuhua.model.bo.UserBO;
+import org.tanfuhua.model.entity.UserDO;
+import org.tanfuhua.service.UserService;
+import org.tanfuhua.util.ContextUtil;
 import org.tanfuhua.util.FunctionUtil;
 import org.tanfuhua.util.JacksonJsonUtil;
-import org.tanfuhua.util.SessionUtil;
 import org.tanfuhua.util.StringUtil;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,7 +38,12 @@ import java.util.TreeMap;
 public class FeignConfig {
 
     private final ObjectFactory<HttpMessageConverters> messageConverters;
-    private final AppConfig appConfig;
+    @Resource
+    private AppConfig appConfig;
+    @Resource
+    private UserService userService;
+    @Resource
+    private KyfwFacade kyfwFacade;
 
     // new一个form编码器，实现支持form表单提交
     @Bean
@@ -55,14 +63,15 @@ public class FeignConfig {
             }
 
             // UserBO
-            UserBO userBO = SessionUtil.getUserBO();
-            KyfwBrowserBO browser = userBO.getKyfwBrowserBO();
-            List<Cookie> cookieList = browser.getCookieList();
+            Long userId = ContextUtil.UserHolder.getUserId();
+            UserDO userDO = userService.getById(userId);
+            KyfwBrowserBO browserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
+            List<Cookie> cookieList = browserBO.getCookieList();
 
             Map<String, String> cookieMap = FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new);
 
             String cookie = StringUtil.cookieListToKVString(cookieList);
-            log.info("ReqCookie:{}{}:{}", userBO.getKyfwAccount(), System.lineSeparator(),
+            log.info("ReqCookie:{}{}:{}", "", System.lineSeparator(),
                     JacksonJsonUtil.toPrettyJsonString(cookieMap));
             template.header(HttpHeaders.COOKIE, cookie);
         };

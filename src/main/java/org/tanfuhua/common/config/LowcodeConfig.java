@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class LowcodeConfig {
 
+    private Long id;
     private String username;
     private String password;
     private String config;
