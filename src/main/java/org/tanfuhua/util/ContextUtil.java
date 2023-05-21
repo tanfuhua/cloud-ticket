@@ -2,6 +2,8 @@ package org.tanfuhua.util;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.tanfuhua.model.entity.UserDO;
+import org.tanfuhua.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +45,11 @@ public class ContextUtil {
 
         public static void removeUserId() {
             userThreadLocal.remove();
+        }
+
+        public static UserDO getUserDOCache() {
+            Long userId = getUserId();
+            return SpringUtil.getBean(UserService.class).getById(userId);
         }
 
     }
