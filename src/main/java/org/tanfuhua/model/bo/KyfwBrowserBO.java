@@ -12,6 +12,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.tanfuhua.common.config.AppConfig;
 import org.tanfuhua.exception.BadRequestException;
+import org.tanfuhua.model.entity.UserDO;
 import org.tanfuhua.util.*;
 
 import java.util.*;
@@ -30,6 +31,12 @@ public class KyfwBrowserBO {
         this.chromeDriver = chromeDriver;
         this.webDriverFastWait = webDriverFastWait;
         this.webDriverSlowWait = webDriverSlowWait;
+        // 加载页面
+        AppConfig appConfig = SpringUtil.getBean(AppConfig.class);
+        chromeDriver.get(appConfig.getKyfwUrl());
+        KyfwWebElementUtil.hasLoadUntil(webDriverSlowWait, KyfwWebElementUtil.getJHeaderLogout());
+        UserDO userDOCache = ContextUtil.UserHolder.getUserDOCache();
+        logCookie(userDOCache.getKyfwAccount());
     }
 
     public synchronized void login(KyfwLoginBO kyfwLoginBO) {
