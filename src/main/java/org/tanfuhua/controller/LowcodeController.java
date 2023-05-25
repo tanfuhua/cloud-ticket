@@ -64,7 +64,7 @@ public class LowcodeController {
      */
     @ApiOperation("schema")
     @PostMapping(value = "/scenario/swap", produces = Constant.Str.APPLICATION_JSON_UTF8)
-    public ResponseEntity<ServerResp<Object>> scenarioSchema(@RequestBody Object obj) {
+    public ResponseEntity<ServerResp<Object>> swap(@RequestBody String obj) {
         return ServerResp.createRespEntity(obj, HttpStatus.OK);
     }
 
