@@ -51,9 +51,12 @@ public class TrainTicketFacade {
      * 12306登录
      */
     @Transactional(rollbackFor = Exception.class)
-    public void kyfwLogin(KyfwLoginReqVO reqVO) {
-        String account = reqVO.getAccount();
-        String password = reqVO.getPassword();
+    public void kyfwLogin() {
+
+        UserDO userDOCache = ContextUtil.UserHolder.getUserDOCache();
+
+        String account = userDOCache.getKyfwAccount();
+        String password = userDOCache.getKyfwPassword();
 
         KyfwBrowserBO kyfwBrowserBO = kyfwFacade.createKyfwBrowserBO(account);
 
@@ -91,8 +94,7 @@ public class TrainTicketFacade {
      * 12306信息
      */
     public KyfwInfoRespVO kyfwInfo() {
-        Long userId = ContextUtil.UserHolder.getUserId();
-        UserDO userDO = userService.getById(userId);
+        UserDO userDO = ContextUtil.UserHolder.getUserDOCache();
         KyfwBrowserBO kyfwBrowserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
         return beanConverter.userDOToKyfwInfoRespVO(userDO, kyfwBrowserBO.isLogin());
     }
