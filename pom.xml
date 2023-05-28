@@ -24,7 +24,7 @@
         <mybatisplus.version>3.4.1</mybatisplus.version>
         <pagehelper.version>1.2.10</pagehelper.version>
         <duid.version>1.1.18</duid.version>
-        <mysql.connector.version>5.1.45</mysql.connector.version>
+        <mysql.connector.version>8.0.28</mysql.connector.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <lombok.version>1.18.12</lombok.version>
     </properties>

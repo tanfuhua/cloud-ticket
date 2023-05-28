@@ -7,10 +7,10 @@ spring:
       url: jdbc:mysql://localhost:3306/cloud_book_ticket?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&useSSL=false
       username: root
       password: admin
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       initial-size: 10
       min-idle: 10
-      max-active: 200
+      max-active: 100
       max-wait: 60000
       time-between-eviction-runs-millis: 60000
       min-evictable-idle-time-millis: 300000

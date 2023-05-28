@@ -167,9 +167,9 @@ public class KyfwBrowserBO {
         log.info("refreshPage开始...");
         chromeDriver.get(appConfig.getKyfwUrl());
         log.info("refreshPage完成...");
-        ThreadUtil.sleep(1000);
+//        ThreadUtil.sleep(1000);
         // 如果有弹窗，关闭弹窗
-        closeTipMask();
+//        closeTipMask();
 //        logCookie(SessionUtil.getUserBO().getKyfwAccount());
     }
 

@@ -49,12 +49,22 @@ public class KyfwTrainTicketController {
     }
 
     /**
+     * 12306绑定
+     */
+    @ApiOperation("12306绑定")
+    @PostMapping(value = "/kyfwBind", produces = Constant.Str.APPLICATION_JSON_UTF8)
+    public ResponseEntity<ServerResp<Void>> kyfwBind(@RequestBody KyfwLoginReqVO reqVO) {
+        trainTicketFacade.kyfwLogin();
+        return ServerResp.createRespEntity(HttpStatus.OK);
+    }
+
+    /**
      * 12306登录
      */
     @ApiOperation("12306登录")
     @PostMapping(value = "/kyfwLogin", produces = Constant.Str.APPLICATION_JSON_UTF8)
-    public ResponseEntity<ServerResp<Void>> kyfwLogin(@RequestBody KyfwLoginReqVO reqVO) {
-        trainTicketFacade.kyfwLogin(reqVO);
+    public ResponseEntity<ServerResp<Void>> kyfwLogin() {
+        trainTicketFacade.kyfwLogin();
         return ServerResp.createRespEntity(HttpStatus.OK);
     }
 
