@@ -28,17 +28,17 @@ public class SeleniumFacade implements InitializingBean {
     private AppConfig appConfig;
 
     public ChromeDriver createChromeDriver() {
-        List<String> userAgentList = appConfig.getUserAgentList();
+        List<String> userAgentList = appConfig.getChrome().getUserAgentList();
         int userAgentIndex = ThreadLocalRandom.current().nextInt(userAgentList.size());
         String userAgent = userAgentList.get(userAgentIndex);
         log.info("使用的UserAgent -> 索引：{},UserAgent:{}", userAgentIndex, userAgent);
 
         ChromeOptions chromeOptions = new ChromeOptions();
-        appConfig.getChromeOptionList().forEach(chromeOptions::addArguments);
+        appConfig.getChrome().getDriverOptionList().forEach(chromeOptions::addArguments);
         chromeOptions.addArguments(userAgent);
         try {
             ChromeDriver chromeDriver = new ChromeDriver(chromeOptions);
-            chromeDriver.executeCdpCommand("Page.addScriptToEvaluateOnNewDocument", appConfig.getSeleniumMap());
+            appConfig.getChrome().getDriverCdpCommandMap().forEach(chromeDriver::executeCdpCommand);
             chromeDriver.manage().window().maximize();
             return chromeDriver;
         } catch (Throwable t) {
@@ -49,18 +49,18 @@ public class SeleniumFacade implements InitializingBean {
     }
 
     public WebDriverWait createWebDriverFastWait(ChromeDriver chromeDriver) {
-        return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getWebDriverFastWaitSecond()));
+        return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getChrome().getDriverFastWaitSecond()));
     }
 
     public WebDriverWait createWebDriverSlowWait(ChromeDriver chromeDriver) {
-        return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getWebDriverSlowWaitSecond()));
+        return new WebDriverWait(chromeDriver, Duration.ofSeconds(appConfig.getChrome().getDriverSlowWaitSecond()));
     }
 
     @Override
     public void afterPropertiesSet() {
-        URL url = appConfig.getClass().getResource(appConfig.getChromeDriverPath());
+        URL url = appConfig.getClass().getResource(appConfig.getChrome().getDriverPath());
         if (Objects.isNull(url)) {
-            throw new RuntimeException(String.format("路径：%s不存在driver", appConfig.getChromeDriverPath()));
+            throw new RuntimeException(String.format("路径：%s不存在driver", appConfig.getChrome().getDriverPath()));
         }
         System.setProperty("webdriver.chrome.driver", url.getFile());
     }

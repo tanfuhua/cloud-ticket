@@ -57,7 +57,7 @@ public class FeignConfig {
     public RequestInterceptor requestInterceptor() {
         return template -> {
             // referer
-            String referer = appConfig.getKyfwUrlRefererMap().get(template.url().replace("/", ""));
+            String referer = appConfig.getKyfw().getUrlRefererMap().get(template.url().replace("/", ""));
             if (referer != null) {
                 template.header("Referer", referer);
             }

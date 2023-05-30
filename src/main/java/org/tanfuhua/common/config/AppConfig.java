@@ -18,23 +18,27 @@ import java.util.Map;
 @Getter
 public class AppConfig {
 
-    private String chromeDriverPath;
+    private Chrome chrome;
 
-    private Map<String, Object> seleniumMap;
+    private Kyfw kyfw;
 
-    private List<String> chromeOptionList;
+    @Setter
+    @Getter
+    public static class Chrome {
+        private String driverPath;
+        private List<String> driverOptionList;
+        private Map<String, Map<String, Object>> driverCdpCommandMap;
+        private int driverFastWaitSecond;
+        private int driverSlowWaitSecond;
 
-    private List<String> userAgentList;
+        private List<String> userAgentList;
 
-    private int webDriverFastWaitSecond;
-
-    private int webDriverSlowWaitSecond;
-
-    private int checkSubmitOrderWaitSecond;
-
-    private String kyfwUrl;
-
-    private Map<String, String> kyfwUrlRefererMap;
-
-
+    }
+    @Setter
+    @Getter
+    public static class Kyfw {
+        private String indexUrl;
+        private Map<String, String> urlRefererMap;
+        private int checkSubmitOrderWaitSecond;
+    }
 }

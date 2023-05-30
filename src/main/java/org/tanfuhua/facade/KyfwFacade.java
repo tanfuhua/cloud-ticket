@@ -525,7 +525,7 @@ public class KyfwFacade {
     public void checkSubmitSuccess(String repeatSubmitToken) {
         try {
             while (true) {
-                ThreadUtil.sleep(appConfig.getCheckSubmitOrderWaitSecond() * 1000L);
+                ThreadUtil.sleep(appConfig.getKyfw().getCheckSubmitOrderWaitSecond() * 1000L);
                 String response = kyfwClient.queryOrderWaitTime(System.currentTimeMillis(), "dc", "", repeatSubmitToken);
                 KyfwRespBO<Map<String, Object>> KyfwRespBO = JacksonJsonUtil.parseObject(
                         response,

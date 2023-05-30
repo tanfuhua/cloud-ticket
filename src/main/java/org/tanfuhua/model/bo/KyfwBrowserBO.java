@@ -33,7 +33,7 @@ public class KyfwBrowserBO {
         this.webDriverSlowWait = webDriverSlowWait;
         // 加载页面
         AppConfig appConfig = SpringUtil.getBean(AppConfig.class);
-        chromeDriver.get(appConfig.getKyfwUrl());
+        chromeDriver.get(appConfig.getKyfw().getIndexUrl());
         KyfwWebElementUtil.hasLoadUntil(webDriverSlowWait, KyfwWebElementUtil.getJHeaderLogout());
         UserDO userDOCache = ContextUtil.UserHolder.getUserDOCache();
         logCookie(userDOCache.getKyfwAccount());
@@ -42,7 +42,7 @@ public class KyfwBrowserBO {
     public synchronized void login(KyfwLoginBO kyfwLoginBO) {
         AppConfig appConfig = SpringUtil.getBean(AppConfig.class);
         // 加载页面
-        chromeDriver.get(appConfig.getKyfwUrl());
+        chromeDriver.get(appConfig.getKyfw().getIndexUrl());
         // 检查：登录
         if (isShowUserName()) {
             logCookie(kyfwLoginBO.getKyfwAccount());
@@ -165,7 +165,7 @@ public class KyfwBrowserBO {
     public synchronized void refresh() {
         AppConfig appConfig = SpringUtil.getBean(AppConfig.class);
         log.info("refreshPage开始...");
-        chromeDriver.get(appConfig.getKyfwUrl());
+        chromeDriver.get(appConfig.getKyfw().getIndexUrl());
         log.info("refreshPage完成...");
 //        ThreadUtil.sleep(1000);
         // 如果有弹窗，关闭弹窗
