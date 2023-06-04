@@ -53,8 +53,7 @@ public class OkHttpClientConfig {
                     }
                     log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(setCookieList));
                     List<Cookie> cookieList = setCookieList.stream().map(StringUtil::stringToCookie).collect(Collectors.toList());
-                    Long userId = ContextUtil.UserHolder.getUserId();
-                    UserDO userDO = userService.getById(userId);
+                    UserDO userDO = ContextUtil.UserHolder.getUserDOCache();
                     KyfwBrowserBO browserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
                     browserBO.setCookieList(cookieList);
                     log.info("RespCookie:{}", JacksonJsonUtil.toPrettyJsonString(FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new)));

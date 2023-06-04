@@ -63,8 +63,7 @@ public class FeignConfig {
             }
 
             // UserBO
-            Long userId = ContextUtil.UserHolder.getUserId();
-            UserDO userDO = userService.getById(userId);
+            UserDO userDO = ContextUtil.UserHolder.getUserDOCache();
             KyfwBrowserBO browserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
             List<Cookie> cookieList = browserBO.getCookieList();
 
