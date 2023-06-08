@@ -20,20 +20,39 @@ public class AppConfig {
 
     private Chrome chrome;
 
+    private Edge edge;
+
+    private Browser browser;
+
     private Kyfw kyfw;
 
     @Setter
     @Getter
     public static class Chrome {
+        private String driverKey;
         private String driverPath;
+    }
+
+    @Setter
+    @Getter
+    public static class Browser {
+        private String type;
         private List<String> driverOptionList;
         private Map<String, Map<String, Object>> driverCdpCommandMap;
         private int driverFastWaitSecond;
         private int driverSlowWaitSecond;
-
         private List<String> userAgentList;
 
     }
+
+    @Setter
+    @Getter
+    public static class Edge {
+        private String driverKey;
+        private String driverPath;
+
+    }
+
     @Setter
     @Getter
     public static class Kyfw {
