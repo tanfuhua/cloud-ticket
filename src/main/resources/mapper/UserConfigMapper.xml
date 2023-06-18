@@ -6,6 +6,7 @@
         <result column="user_id" property="userId"/>
         <result column="start_book_info" property="startBookInfo"/>
         <result column="cookie_valid_status" property="cookieValidStatus"/>
+        <result column="cookie" property="cookie"/>
         <result column="schedule_time" property="scheduleTime"/>
         <result column="run_status" property="runStatus"/>
         <result column="book_type" property="bookType"/>
