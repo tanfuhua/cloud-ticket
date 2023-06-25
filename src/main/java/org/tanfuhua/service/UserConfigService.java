@@ -11,4 +11,6 @@ public interface UserConfigService extends IService<UserConfigDO> {
 
     UserConfigDO getByUserId(Long userId);
 
+    void updateCookie(Long userId, Boolean cookieStatus, String cookie);
+
 }
