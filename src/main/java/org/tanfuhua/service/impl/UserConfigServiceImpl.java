@@ -21,4 +21,14 @@ public class UserConfigServiceImpl extends ServiceImpl<UserConfigMapper, UserCon
                 .eq(UserConfigDO::getUserId, userId));
     }
 
+    @Override
+    public void updateCookie(Long userId, Boolean cookieStatus, String cookie) {
+        UserConfigDO configDO = getByUserId(userId);
+        UserConfigDO updateDO = new UserConfigDO();
+        updateDO.setId(configDO.getId());
+        updateDO.setCookieValidStatus(cookieStatus);
+        updateDO.setCookie(cookie);
+        updateById(updateDO);
+    }
+
 }
