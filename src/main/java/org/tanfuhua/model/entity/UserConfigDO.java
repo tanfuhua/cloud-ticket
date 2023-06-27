@@ -28,6 +28,8 @@ public class UserConfigDO extends BaseDO {
 
     private Boolean cookieValidStatus;
 
+    private String cookie;
+
     private Date scheduleTime;
 
     private Boolean runStatus;
