@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tanfuhua.common.constant.Constant;
 import org.tanfuhua.controller.vo.request.KyfwBookTrainTicketReqVO;
-import org.tanfuhua.controller.vo.request.KyfwLoginReqVO;
 import org.tanfuhua.controller.vo.request.KyfwQueryTicketReqVO;
 import org.tanfuhua.controller.vo.response.KyfwInfoRespVO;
 import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
@@ -23,10 +22,7 @@ import org.tanfuhua.model.entity.UserConfigDO;
 import org.tanfuhua.model.entity.UserDO;
 import org.tanfuhua.service.UserConfigService;
 import org.tanfuhua.service.UserService;
-import org.tanfuhua.util.ContextUtil;
-import org.tanfuhua.util.DateUtil;
-import org.tanfuhua.util.FunctionUtil;
-import org.tanfuhua.util.JacksonJsonUtil;
+import org.tanfuhua.util.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -53,6 +49,11 @@ public class TrainTicketFacade {
     @Transactional(rollbackFor = Exception.class)
     public void kyfwLogin() {
 
+        KyfwInfoRespVO kyfwInfoRespVO = kyfwInfo();
+        if (kyfwInfoRespVO.getIsLogin()) {
+            return;
+        }
+
         UserDO userDOCache = ContextUtil.UserHolder.getUserDOCache();
 
         String account = userDOCache.getKyfwAccount();
@@ -71,16 +72,6 @@ public class TrainTicketFacade {
             userDO.setKyfwAccount(account);
             userDO.setKyfwPassword(password);
             userService.save(userDO);
-            // 新建UserConfigPO
-            UserConfigDO userConfigPO = new UserConfigDO();
-            userConfigPO.setUserId(userDO.getId());
-            userConfigPO.setStartBookInfo(JacksonJsonUtil.DEFAULT_OBJECT_JSON_STRING);
-            userConfigPO.setCookieValidStatus(false);
-            userConfigPO.setScheduleTime(new Date());
-            userConfigPO.setRunStatus(false);
-            userConfigPO.setBookType(BookTypeEnum.INITIAL);
-            userConfigPO.setUserAgentIndex(1);
-            userConfigService.save(userConfigPO);
         } else if (!userDO.getKyfwAccount().equals(account) || !userDO.getKyfwPassword().equals(password)) {
             UserDO updateUser = new UserDO();
             updateUser.setId(userDO.getId());
@@ -88,6 +79,30 @@ public class TrainTicketFacade {
             updateUser.setKyfwPassword(password);
             userService.updateById(updateUser);
         }
+
+        UserConfigDO userConfigDO = userConfigService.getByUserId(userDO.getId());
+        if (Objects.isNull(userConfigDO)) {
+            // 新建UserConfigPO
+            userConfigDO = new UserConfigDO();
+            userConfigDO.setUserId(userDO.getId());
+            userConfigDO.setStartBookInfo(JacksonJsonUtil.DEFAULT_OBJECT_JSON_STRING);
+            userConfigDO.setCookieValidStatus(true);
+            userConfigDO.setCookie(StringUtil.cookieListToKVString(kyfwBrowserBO.getCookieList()));
+            userConfigDO.setScheduleTime(new Date());
+            userConfigDO.setRunStatus(false);
+            userConfigDO.setBookType(BookTypeEnum.INITIAL);
+            userConfigDO.setUserAgentIndex(1);
+            userConfigService.save(userConfigDO);
+        } else {
+            UserConfigDO updateDO = new UserConfigDO();
+            updateDO.setId(userConfigDO.getId());
+            updateDO.setCookieValidStatus(true);
+            updateDO.setCookie(StringUtil.cookieListToKVString(kyfwBrowserBO.getCookieList()));
+            userConfigService.updateById(updateDO);
+        }
+
+        kyfwFacade.stopKyfwBrowserBO(account);
+
     }
 
     /**
@@ -95,8 +110,12 @@ public class TrainTicketFacade {
      */
     public KyfwInfoRespVO kyfwInfo() {
         UserDO userDO = ContextUtil.UserHolder.getUserDOCache();
-        KyfwBrowserBO kyfwBrowserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
-        return beanConverter.userDOToKyfwInfoRespVO(userDO, kyfwBrowserBO.isLogin());
+        UserConfigDO userConfigDO = userConfigService.getByUserId(userDO.getId());
+        boolean cookieValidStatus = false;
+        if (Objects.nonNull(userConfigDO)) {
+            cookieValidStatus = userConfigDO.getCookieValidStatus();
+        }
+        return beanConverter.userDOToKyfwInfoRespVO(userDO, cookieValidStatus);
     }
 
     /**
