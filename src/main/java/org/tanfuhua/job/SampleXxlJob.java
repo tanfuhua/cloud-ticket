@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.tanfuhua.exception.BadRequestException;
 import org.tanfuhua.facade.KyfwFacade;
@@ -48,7 +49,8 @@ public class SampleXxlJob {
 
     private final UserConfigService userConfigService;
 
-    @XxlJob("kyfwSessionRefresh")
+//    @XxlJob("kyfwSessionRefresh")
+    @Scheduled(fixedRate = 300*1000)
     public void kyfwSessionRefresh() {
         int sleep = ThreadLocalRandom.current().nextInt(3000);
         ThreadUtil.sleep(sleep);
