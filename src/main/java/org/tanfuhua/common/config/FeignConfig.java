@@ -17,7 +17,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.tanfuhua.facade.KyfwFacade;
 import org.tanfuhua.model.bo.KyfwBrowserBO;
+import org.tanfuhua.model.entity.UserConfigDO;
 import org.tanfuhua.model.entity.UserDO;
+import org.tanfuhua.service.UserConfigService;
 import org.tanfuhua.service.UserService;
 import org.tanfuhua.util.ContextUtil;
 import org.tanfuhua.util.FunctionUtil;
@@ -41,7 +43,7 @@ public class FeignConfig {
     @Resource
     private AppConfig appConfig;
     @Resource
-    private UserService userService;
+    private UserConfigService userConfigService;
     @Resource
     private KyfwFacade kyfwFacade;
 
@@ -64,15 +66,8 @@ public class FeignConfig {
 
             // UserBO
             UserDO userDO = ContextUtil.UserHolder.getUserDOCache();
-            KyfwBrowserBO browserBO = kyfwFacade.createKyfwBrowserBO(userDO.getKyfwAccount());
-            List<Cookie> cookieList = browserBO.getCookieList();
-
-            Map<String, String> cookieMap = FunctionUtil.convertCollToMap(cookieList, Cookie::getName, Cookie::getValue, TreeMap::new);
-
-            String cookie = StringUtil.cookieListToKVString(cookieList);
-            log.info("ReqCookie:{}{}:{}", "", System.lineSeparator(),
-                    JacksonJsonUtil.toPrettyJsonString(cookieMap));
-            template.header(HttpHeaders.COOKIE, cookie);
+            UserConfigDO userConfigDO = userConfigService.getByUserId(userDO.getId());
+            template.header(HttpHeaders.COOKIE, userConfigDO.getCookie());
         };
     }
 
