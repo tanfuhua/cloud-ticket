@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Collections;
@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @UtilityClass
 public class KyfwWebElementUtil {
-
-
 
 
     /**
@@ -264,21 +262,21 @@ public class KyfwWebElementUtil {
     /**
      * 设置元素某属性值
      */
-    public static void setWebEleAttr(ChromeDriver webDriver, WebElement webElement, String attr, String value) {
-        webDriver.executeScript("arguments[0]." + attr + " = '" + value + "';", webElement);
+    public static void setWebEleAttr(WebDriver webDriver, WebElement webElement, String attr, String value) {
+        ((RemoteWebDriver) webDriver).executeScript("arguments[0]." + attr + " = '" + value + "';", webElement);
     }
 
     /**
      * 设置元素的value值
      */
-    public static void setWebEleValue(ChromeDriver webDriver, WebElement webElement, String value) {
+    public static void setWebEleValue(WebDriver webDriver, WebElement webElement, String value) {
         setWebEleAttr(webDriver, webElement, "value", value);
     }
 
     /**
      * 设置元素的innerHTML
      */
-    public static void setWebEleInnerHTML(ChromeDriver webDriver, WebElement webElement, String innerHTML) {
+    public static void setWebEleInnerHTML(WebDriver webDriver, WebElement webElement, String innerHTML) {
         setWebEleAttr(webDriver, webElement, "innerHTML", innerHTML);
     }
 
@@ -293,5 +291,9 @@ public class KyfwWebElementUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static Object execScript(WebDriver webDriver, String script, Object... args) {
+        return ((RemoteWebDriver) webDriver).executeScript(script, args);
     }
 }
