@@ -19,8 +19,32 @@ public class KyfwUserBO implements Serializable {
     private static final long serialVersionUID = 7488300053040617381L;
     @JsonAlias("isstudentDate")
     private Boolean isStudentDate;
+    @JsonAlias("is_message_passCode")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isMessagePassCode;
+    @JsonAlias("born_date")
+    private String bormDate;
+    @JsonAlias("is_phone_check")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isPhoneCheck;
     @JsonAlias("studentDate")
     private List<String> studentDate;
+    @JsonAlias("is_uam_login")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isUamLogin;
+    @JsonAlias("is_login_passCode")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isLoginPassCode;
+    @JsonAlias("is_sweep_login")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isSweepLogin;
+    @JsonAlias("queryUrl")
+    private String queryUrl;
+    @JsonAlias("psr_qr_code_result")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean psrQrCodeResult;
+    @JsonAlias("now")
+    private Long now;
     @JsonAlias("user_name")
     private String userName;
     @JsonAlias("name")
@@ -28,4 +52,7 @@ public class KyfwUserBO implements Serializable {
     @JsonAlias("is_login")
     @JsonDeserialize(using = BooleanJsonDeserialize.class)
     private Boolean isLogin;
+    @JsonAlias("is_olympicLogin")
+    @JsonDeserialize(using = BooleanJsonDeserialize.class)
+    private Boolean isOlympicLogin;
 }
