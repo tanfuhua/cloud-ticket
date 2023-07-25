@@ -20,6 +20,7 @@ import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
 import org.tanfuhua.controller.vo.response.KyfwRemainingTicketRespVO;
 import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
 import org.tanfuhua.facade.TrainTicketFacade;
+import org.tanfuhua.job.SampleXxlJob;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,6 +38,8 @@ import java.util.List;
 public class KyfwTrainTicketController {
 
     private final TrainTicketFacade trainTicketFacade;
+
+    private final SampleXxlJob sampleXxlJob;
 
     /**
      * 12306信息
@@ -114,6 +117,16 @@ public class KyfwTrainTicketController {
     @PostMapping(value = "/bookTrainTicket", produces = Constant.Str.APPLICATION_JSON_UTF8)
     public ResponseEntity<ServerResp<Void>> bookTrainTicket(@Valid @RequestBody KyfwBookTrainTicketReqVO reqVO) {
         trainTicketFacade.bookTrainTicket(reqVO);
+        return ServerResp.createRespEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 手动触发保持session
+     */
+    @ApiOperation("手动触发保持session")
+    @PostMapping(value = "/sessionRefresh", produces = Constant.Str.APPLICATION_JSON_UTF8)
+    public ResponseEntity<ServerResp<Void>> sessionRefresh() {
+        sampleXxlJob.kyfwSessionRefresh();
         return ServerResp.createRespEntity(HttpStatus.OK);
     }
 
