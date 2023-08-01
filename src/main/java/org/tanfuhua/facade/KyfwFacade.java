@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.http.HttpEntity;
@@ -66,11 +67,19 @@ public class KyfwFacade {
 
     public KyfwBrowserBO createKyfwBrowserBO(String account) {
         return accountAndBrowserMap.computeIfAbsent(account, (k) -> {
-            ChromeDriver chromeDriver = seleniumFacade.createChromeDriver();
-            WebDriverWait webDriverFastWait = seleniumFacade.createWebDriverFastWait(chromeDriver);
-            WebDriverWait webDriverSlowWait = seleniumFacade.createWebDriverSlowWait(chromeDriver);
-            return new KyfwBrowserBO(chromeDriver, webDriverFastWait, webDriverSlowWait);
+//            WebDriver webDriver = seleniumFacade.createChromeDriver();
+            WebDriver webDriver = seleniumFacade.createEdgeDriver();
+            WebDriverWait webDriverFastWait = seleniumFacade.createWebDriverFastWait(webDriver);
+            WebDriverWait webDriverSlowWait = seleniumFacade.createWebDriverSlowWait(webDriver);
+            return new KyfwBrowserBO(webDriver, webDriverFastWait, webDriverSlowWait);
         });
+    }
+
+    public void stopKyfwBrowserBO(String account) {
+        KyfwBrowserBO kyfwBrowserBO = accountAndBrowserMap.remove(account);
+        if (Objects.nonNull(kyfwBrowserBO)) {
+            kyfwBrowserBO.stop();
+        }
     }
 
 
@@ -112,7 +121,7 @@ public class KyfwFacade {
         List<KyfwTrainStationRespBO> kyfwTrainStationRespBOList = new ArrayList<>(name.length / 9 + 1);
         for (int i = 0; i < name.length; ) {
             KyfwTrainStationRespBO station = new KyfwTrainStationRespBO();
-            // @bjb
+            // 0-@bjb
             String sl = name[i++];
             String[] idAndShortLetter = sl.split("@");
             if (idAndShortLetter.length < 2) {
@@ -120,20 +129,25 @@ public class KyfwFacade {
             }
             station.setId(idAndShortLetter[0]);
             station.setShortLetter(idAndShortLetter[1]);
-            // 北京北
+            // 1-北京北
             station.setChineseName(name[i++]);
-            // VAP
+            // 2-VAP
             station.setEnglishName(name[i++]);
-            // beijingbei
+            // 3-beijingbei
             station.setAllLetter(name[i++]);
-            // bjb
+            // 4-bjb
             station.setFirstLetter(name[i++]);
-            //
+            // 5-0
             i++;
+            // 6-0357
             i++;
             if (i < name.length) {
+                // 7-北京
                 station.setCity(name[i++]);
             }
+            // 8-
+            i++;
+            // 9-
             i++;
             kyfwTrainStationRespBOList.add(station);
         }
