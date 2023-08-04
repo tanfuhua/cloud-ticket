@@ -6,8 +6,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.tanfuhua.common.config.AppConfig;
@@ -23,11 +23,11 @@ import java.util.*;
  */
 @Slf4j
 public class KyfwBrowserBO {
-    private final ChromeDriver chromeDriver;
+    private final WebDriver chromeDriver;
     private final WebDriverWait webDriverFastWait;
     private final WebDriverWait webDriverSlowWait;
 
-    public KyfwBrowserBO(ChromeDriver chromeDriver, WebDriverWait webDriverFastWait, WebDriverWait webDriverSlowWait) {
+    public KyfwBrowserBO(WebDriver chromeDriver, WebDriverWait webDriverFastWait, WebDriverWait webDriverSlowWait) {
         this.chromeDriver = chromeDriver;
         this.webDriverFastWait = webDriverFastWait;
         this.webDriverSlowWait = webDriverSlowWait;
@@ -97,7 +97,7 @@ public class KyfwBrowserBO {
     /**
      * 自动滑块
      */
-    private void autoSlide(ChromeDriver chromeDriver, WebElement nc1N1z) {
+    private void autoSlide(WebDriver chromeDriver, WebElement nc1N1z) {
         Actions actions = new Actions(chromeDriver);
         nc1N1z.click();
         actions.clickAndHold(nc1N1z).perform();
@@ -138,7 +138,7 @@ public class KyfwBrowserBO {
      * 获取用户名
      */
     public synchronized String getUserName() {
-        Object userNameObject = chromeDriver.executeScript("return window.getUserName;");
+        Object userNameObject = KyfwWebElementUtil.execScript(chromeDriver, "return window.getUserName;");
         return userNameObject.toString().trim();
     }
 
@@ -146,7 +146,7 @@ public class KyfwBrowserBO {
      * 获取姓名
      */
     public synchronized String getRealName() {
-        Object realNameObject = chromeDriver.executeScript("return $('a[login-type=\"personal\"]').text();");
+        Object realNameObject = KyfwWebElementUtil.execScript(chromeDriver, "return $('a[login-type=\"personal\"]').text();");
         return realNameObject.toString().trim();
     }
 
@@ -155,7 +155,7 @@ public class KyfwBrowserBO {
      */
     public synchronized boolean isLogin() {
         refresh();
-        Object realNameObject = chromeDriver.executeScript("return window.isLogin;");
+        Object realNameObject = KyfwWebElementUtil.execScript(chromeDriver, "return window.isLogin;");
         return Objects.equals(realNameObject, "Y");
     }
 
@@ -208,5 +208,10 @@ public class KyfwBrowserBO {
             }
         }
         log.info("closeTipMask结束...");
+    }
+
+    public synchronized void stop() {
+        chromeDriver.close();
+        chromeDriver.quit();
     }
 }
