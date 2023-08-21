@@ -58,6 +58,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         corsConfiguration.addExposedHeader(HttpHeaders.AUTHORIZATION);
         return corsConfiguration;
     }
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
