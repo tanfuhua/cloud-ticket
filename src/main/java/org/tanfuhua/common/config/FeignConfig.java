@@ -7,7 +7,6 @@ import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.Cookie;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
@@ -16,20 +15,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.tanfuhua.facade.KyfwFacade;
-import org.tanfuhua.model.bo.KyfwBrowserBO;
 import org.tanfuhua.model.entity.UserConfigDO;
 import org.tanfuhua.model.entity.UserDO;
 import org.tanfuhua.service.UserConfigService;
-import org.tanfuhua.service.UserService;
 import org.tanfuhua.util.ContextUtil;
-import org.tanfuhua.util.FunctionUtil;
-import org.tanfuhua.util.JacksonJsonUtil;
-import org.tanfuhua.util.StringUtil;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author: gaofubo
