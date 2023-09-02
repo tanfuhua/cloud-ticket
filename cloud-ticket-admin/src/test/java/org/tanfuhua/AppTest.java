@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.tanfuhua.common.constant.Constant;
-import org.tanfuhua.util.DateUtil;
+import org.tanfuhua.cloudticket.common.constant.Constant;
+import org.tanfuhua.cloudticket.util.DateUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
