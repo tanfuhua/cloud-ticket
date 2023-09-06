@@ -1,4 +1,4 @@
-package org.tanfuhua.common.interceptor;
+package org.tanfuhua.cloudticket.common.interceptor;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.tanfuhua.common.constant.Constant;
-import org.tanfuhua.exception.LoginExpireException;
-import org.tanfuhua.util.ContextUtil;
-import org.tanfuhua.util.JwtUtil;
+import org.tanfuhua.cloudticket.common.constant.Constant;
+import org.tanfuhua.cloudticket.exception.LoginExpireException;
+import org.tanfuhua.cloudticket.util.ContextUtil;
+import org.tanfuhua.cloudticket.util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
