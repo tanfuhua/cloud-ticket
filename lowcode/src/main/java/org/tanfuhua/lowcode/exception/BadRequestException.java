@@ -1,4 +1,4 @@
-package org.tanfuhua.exception;
+package org.tanfuhua.lowcode.exception;
 
 import lombok.Getter;
 import lombok.Setter;
