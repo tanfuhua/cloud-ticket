@@ -1,4 +1,4 @@
-package org.tanfuhua.model.entity;
+package org.tanfuhua.lowcode.model;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
