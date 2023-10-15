@@ -1,4 +1,4 @@
-package org.tanfuhua.enums;
+package org.tanfuhua.cloudticket.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
