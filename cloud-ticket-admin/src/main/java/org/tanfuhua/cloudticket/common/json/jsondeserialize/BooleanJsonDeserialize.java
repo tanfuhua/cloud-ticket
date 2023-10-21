@@ -1,4 +1,4 @@
-package org.tanfuhua.common.json.jsondeserialize;
+package org.tanfuhua.cloudticket.common.json.jsondeserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
