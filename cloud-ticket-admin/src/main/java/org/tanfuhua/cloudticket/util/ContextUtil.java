@@ -1,9 +1,9 @@
-package org.tanfuhua.util;
+package org.tanfuhua.cloudticket.util;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.tanfuhua.model.entity.UserDO;
-import org.tanfuhua.service.UserService;
+import org.tanfuhua.cloudticket.model.entity.UserDO;
+import org.tanfuhua.cloudticket.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
