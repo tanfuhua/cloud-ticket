@@ -1,4 +1,4 @@
-package org.tanfuhua.common.aop;
+package org.tanfuhua.lowcode.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -8,10 +8,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.tanfuhua.common.response.RespStatusEnum;
-import org.tanfuhua.common.response.ServerResp;
-import org.tanfuhua.exception.BadRequestException;
-import org.tanfuhua.exception.LoginExpireException;
+import org.tanfuhua.lowcode.constant.enums.RespStatusEnum;
+import org.tanfuhua.lowcode.controller.response.ServerResp;
+import org.tanfuhua.lowcode.exception.BadRequestException;
+import org.tanfuhua.lowcode.exception.LoginExpireException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
