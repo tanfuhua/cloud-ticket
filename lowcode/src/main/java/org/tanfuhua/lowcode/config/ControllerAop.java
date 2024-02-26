@@ -8,7 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.tanfuhua.lowcode.constant.enums.RespStatusEnum;
+import org.tanfuhua.lowcode.constant.RespStatusEnum;
 import org.tanfuhua.lowcode.controller.response.ServerResp;
 import org.tanfuhua.lowcode.exception.BadRequestException;
 import org.tanfuhua.lowcode.exception.LoginExpireException;
