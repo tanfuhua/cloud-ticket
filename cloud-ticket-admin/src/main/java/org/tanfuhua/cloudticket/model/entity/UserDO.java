@@ -1,4 +1,4 @@
-package org.tanfuhua.model.entity;
+package org.tanfuhua.cloudticket.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;

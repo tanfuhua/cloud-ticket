@@ -8,15 +8,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.Cookie;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.tanfuhua.facade.KyfwFacade;
-import org.tanfuhua.model.bo.KyfwBrowserBO;
-import org.tanfuhua.model.entity.UserConfigDO;
-import org.tanfuhua.model.entity.UserDO;
 import org.tanfuhua.service.UserConfigService;
 import org.tanfuhua.util.*;
 
@@ -25,7 +21,6 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * @author gaofubo
