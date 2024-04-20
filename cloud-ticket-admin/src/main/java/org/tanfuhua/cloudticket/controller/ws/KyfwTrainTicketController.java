@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.tanfuhua.cloudticket.facade.TrainTicketFacade;
 import org.tanfuhua.common.constant.Constant;
 import org.tanfuhua.common.response.ListRespVO;
 import org.tanfuhua.common.response.ServerResp;
@@ -23,7 +24,6 @@ import org.tanfuhua.controller.vo.response.KyfwInfoRespVO;
 import org.tanfuhua.controller.vo.response.KyfwPassengerRespVO;
 import org.tanfuhua.controller.vo.response.KyfwRemainingTicketRespVO;
 import org.tanfuhua.controller.vo.response.KyfwTrainStationRespVO;
-import org.tanfuhua.facade.TrainTicketFacade;
 import org.tanfuhua.job.SampleXxlJob;
 
 import javax.validation.Valid;
