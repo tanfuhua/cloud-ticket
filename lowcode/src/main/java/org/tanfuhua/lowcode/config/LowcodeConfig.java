@@ -1,4 +1,4 @@
-package org.tanfuhua.common.config;
+package org.tanfuhua.lowcode.config;
 
 import lombok.Getter;
 import lombok.Setter;
