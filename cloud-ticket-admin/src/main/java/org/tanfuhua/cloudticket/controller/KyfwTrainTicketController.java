@@ -1,4 +1,4 @@
-package org.tanfuhua.cloudticket.controller.ws;
+package org.tanfuhua.cloudticket.controller;
 
 
 import io.swagger.annotations.Api;
